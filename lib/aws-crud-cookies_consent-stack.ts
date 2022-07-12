@@ -117,9 +117,5 @@ export class AwsCrudCookiesConsentStack extends Stack {
         getCookiesconsent.addMethod('GET', new apigateway.LambdaIntegration(getCookiesConsentLambda));
 
 
-        new cdk.CfnOutput(this, "HTTP API URL", {
-            value: cookiesApi.url ?? "Something went wrong with deploying the API",
-        })
-
   }
 }

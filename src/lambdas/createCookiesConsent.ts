@@ -3,15 +3,23 @@ import {formatUserIp} from "/opt/nodejs/utils/formatUserIp";
 import {CookiesConsent} from "/opt/nodejs/entities/CookiesConsent";
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
-const tableName = "CookiesConsent";
-// const metrics = new Metrics();
+const tableName = process.env.TABLE_NAME || "";
 
 export const handler = async (event: any, context:any ): Promise<any> => {
+    console.log("Context",context)
+    console.log("Event",event)
 
-    if(!event.body){
+    if (!event.body){
         return {
             statusCode: 400,
             body: 'Error, data not found',
+        }
+    }
+
+    if (event.headers.hasOwnProperty('Postman-Token')) {
+        return {
+            statusCode: 403,
+            body: 'Postman is not allowed.',
         }
     }
 
@@ -29,7 +37,6 @@ export const handler = async (event: any, context:any ): Promise<any> => {
         ConditionExpression: "attribute_not_exists(PK)",
     };
     await dynamodb.put(createDynamodbCookiesParams).promise();
-    // metrics.addMetric('UserCookiesConsent', MetricUnits.Count, 1)
 
         return {
             statusCode: 200,
