@@ -38,14 +38,6 @@ export class AwsCrudCookiesConsentStack extends cdk.Stack {
             code: new lambda.AssetCode(`${__dirname}/../src/layers/common/`),
       });
 
-      const utilsLayer = new lambda.LayerVersion(this, "utilsLayer", {
-          compatibleRuntimes: [
-              lambda.Runtime.NODEJS_12_X,
-              lambda.Runtime.NODEJS_14_X
-          ],
-          code: new lambda.AssetCode(`${__dirname}/../src/layers/common`),
-      });
-
     //define  Lambdas functions
       const cookiesConsentLambda = new lambda.Function(this, "CookiesConsentLambda", {
         runtime: lambda.Runtime.NODEJS_12_X,
@@ -54,7 +46,7 @@ export class AwsCrudCookiesConsentStack extends cdk.Stack {
         environment: {
             TABLE_NAME: cookiesConsentTable.tableName,
         },
-        layers: [cookiesConsentLayer, utilsLayer]
+        layers: [cookiesConsentLayer]
       });
 
       const getCookiesConsentLambda = new lambda.Function(this, "getCookiesConsentLambda", {

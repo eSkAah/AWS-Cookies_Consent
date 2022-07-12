@@ -3,28 +3,26 @@ import {formatUserIp} from "/opt/nodejs/utils/formatUserIp";
 import {CookiesConsent} from "/opt/nodejs/entities/CookiesConsent";
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
-const tableName = "CookiesConsent"
+const tableName = "CookiesConsent";
 
 export const handler = async (event: any, context:any ): Promise<any> => {
-    console.log("EVENT API",event)
-    console.log("CONTEXT API",context)
+    console.log("TABLE NAME", tableName)
 
     if(!event.body){
         return {
-            body: 'Error, data not found', statusCode: 400,
+            statusCode: 400,
+            body: 'Error, data not found',
         }
     }
 
     const body = typeof event.body == "object" ? event.body : JSON.parse(event.body);
-    const userAgent = event.headers["User-Agent"];
-    const userIp = formatUserIp(event.requestContext.identity.sourceIp);
 
     const cookiesConsent: CookiesConsent = new CookiesConsent(body);
-    cookiesConsent.url= event.headers.Host;
-    cookiesConsent.userAgent = userAgent
-    cookiesConsent.anonymousIp = userIp
+    cookiesConsent.url= event.headers.host;
+    cookiesConsent.userAgent = event.headers["User-Agent"]
+    cookiesConsent.anonymousIp = formatUserIp(event.requestContext.identity.sourceIp)
 
-    console.log("CookiesConsent ",cookiesConsent);
+    console.log("Cookies Consent Data : ",cookiesConsent);
 
     const createDynamodbCookiesParams = {
         TableName: tableName,

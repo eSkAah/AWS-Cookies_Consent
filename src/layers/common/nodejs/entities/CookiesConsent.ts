@@ -33,15 +33,15 @@ export class CookiesConsent implements ICookiesConsent {
         marketing: boolean;
     };
     constructor({
-                    id = uuid(),
+        id = uuid(),
         timestamp = new Date(),
-        anonymousIp="inprogress",
-                    action,
-                    url,
-                    userAgent,
-                    bannerText,
-                    consents,
-                }: any) {
+        anonymousIp = "inprogress",
+        action,
+        url,
+        userAgent,
+        bannerText,
+        consents,
+    }: any) {
         this.id = id;
         this.timestamp = new Date(timestamp);
         this.anonymousIp = anonymousIp;
@@ -62,7 +62,6 @@ export class CookiesConsent implements ICookiesConsent {
         };
     }
 
-
     toItem() {
         return {
             ...this.key(),
@@ -76,5 +75,4 @@ export class CookiesConsent implements ICookiesConsent {
             consents: this.consents,
         };
     }
-
 }
