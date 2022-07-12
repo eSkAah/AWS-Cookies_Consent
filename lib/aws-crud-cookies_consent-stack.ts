@@ -12,22 +12,22 @@ export class AwsCrudCookiesConsentStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    //Define variables
-      const modelName = "CookiesConsent";
+    //Define  variables
+    const cookiesModelName = "CookiesConsent";
     const hostedZoneDomain = "abr.d.kodehyve.com";
     const applicationDomain = `devtest.${hostedZoneDomain}`;
     const apiDomain = `api.${applicationDomain}`;
     const zone = route53.HostedZone.fromLookup(this, "HostedZone", {domainName: hostedZoneDomain,});
 
     //define dynamodb table
-    const cookiesContentTable = new dynamodb.Table(this, "CookiesConsentTable", {
+    const cookiesConsentTable = new dynamodb.Table(this, "CookiesConsentTable", {
         billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
         partitionKey: {
             name: "PK",
             type: dynamodb.AttributeType.STRING
         },
         removalPolicy: cdk.RemovalPolicy.DESTROY,
-        tableName: modelName
+        tableName: cookiesModelName
     });
 
     //define lambda layer
@@ -42,7 +42,6 @@ export class AwsCrudCookiesConsentStack extends cdk.Stack {
           compatibleRuntimes: [
               lambda.Runtime.NODEJS_12_X,
               lambda.Runtime.NODEJS_14_X
-
           ],
           code: new lambda.AssetCode(`${__dirname}/../src/layers/common`),
       });
@@ -53,7 +52,7 @@ export class AwsCrudCookiesConsentStack extends cdk.Stack {
         handler: "createCookiesConsent.handler",
         code: lambda.Code.fromAsset(`${__dirname}/../src/lambdas`),
         environment: {
-            TABLE_NAME: cookiesContentTable.tableName,
+            TABLE_NAME: cookiesConsentTable.tableName,
         },
         layers: [cookiesConsentLayer, utilsLayer]
       });
@@ -63,13 +62,13 @@ export class AwsCrudCookiesConsentStack extends cdk.Stack {
           handler: "getCookiesConsent.handler",
           code: lambda.Code.fromAsset(`${__dirname}/../src/lambdas`),
           environment: {
-              TABLE_NAME: cookiesContentTable.tableName,
+              TABLE_NAME: cookiesConsentTable.tableName,
           }
       });
 
       //define rights of lambdas
-      cookiesContentTable.grantWriteData(cookiesConsentLambda);
-      cookiesContentTable.grantReadData(cookiesConsentLambda);
+      cookiesConsentTable.grantWriteData(cookiesConsentLambda);
+      cookiesConsentTable.grantReadData(cookiesConsentLambda);
 
       //define wildCard certificate
       const wildcardCertificate = new acm.DnsValidatedCertificate(this, "WildcardCertificate", {
