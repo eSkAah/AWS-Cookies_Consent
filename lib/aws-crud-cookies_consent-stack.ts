@@ -18,7 +18,7 @@ export class AwsCrudCookiesConsentStack extends Stack {
     //Define  variables
     const cookiesModelName = "CookiesConsent";
     const hostedZoneDomain = "abr.d.kodehyve.com";
-    const applicationDomain = `devtest.${hostedZoneDomain}`;
+    const applicationDomain = `dev-cookies.${hostedZoneDomain}`;
     const apiDomain = `api.${applicationDomain}`;
     const zone = route53.HostedZone.fromLookup(this, "HostedZone", {domainName: hostedZoneDomain,});
 
@@ -89,6 +89,8 @@ export class AwsCrudCookiesConsentStack extends Stack {
           )
       });
 
+
+
       //define l'API
       const cookiesApi = new apigateway.RestApi(this, "CookiesConsentAPI", {
             deployOptions: {
@@ -98,6 +100,7 @@ export class AwsCrudCookiesConsentStack extends Stack {
               allowOrigins: apigateway.Cors.ALL_ORIGINS,
               allowMethods: apigateway.Cors.ALL_METHODS,
               allowCredentials: true,
+
           },
           endpointTypes: [EndpointType.EDGE]
       });
