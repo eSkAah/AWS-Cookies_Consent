@@ -1,15 +1,18 @@
-import * as cdk from "@aws-cdk/core";
-import * as dynamodb from "@aws-cdk/aws-dynamodb";
-import * as apigateway from "@aws-cdk/aws-apigateway";
-import * as lambda from "@aws-cdk/aws-lambda";
-import * as route53 from '@aws-cdk/aws-route53';
-import * as acm from "@aws-cdk/aws-certificatemanager";
-import * as targets from "@aws-cdk/aws-route53-targets";
-import {EndpointType} from "@aws-cdk/aws-apigateway";
+import * as cdk from "aws-cdk-lib";
+import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
+import * as apigateway from "aws-cdk-lib/aws-apigateway";
+import * as lambda from "aws-cdk-lib/aws-lambda";
+import * as route53 from 'aws-cdk-lib/aws-route53';
+import * as acm from "aws-cdk-lib/aws-certificatemanager";
+import * as targets from "aws-cdk-lib/aws-route53-targets";
+// import {EndpointType} from "aws-cdk-lib/";
+import {Construct} from "constructs";
+import {Stack, StackProps} from "aws-cdk-lib";
+import {EndpointType} from "aws-cdk-lib/aws-apigateway";
 
 
-export class AwsCrudCookiesConsentStack extends cdk.Stack {
-  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
+export class AwsCrudCookiesConsentStack extends Stack {
+  constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
     //Define  variables
@@ -38,7 +41,7 @@ export class AwsCrudCookiesConsentStack extends cdk.Stack {
             code: new lambda.AssetCode(`${__dirname}/../src/layers/common/`),
       });
 
-    //define  Lambdas functions
+    //define Lambdas functions
       const cookiesConsentLambda = new lambda.Function(this, "CookiesConsentLambda", {
         runtime: lambda.Runtime.NODEJS_12_X,
         handler: "createCookiesConsent.handler",

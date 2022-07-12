@@ -11,7 +11,7 @@ export interface ICookiesConsent {
     consents: {
         uncategorized: boolean;
         essential: boolean;
-        personnalization: boolean;
+        personalization: boolean;
         analytics: boolean;
         marketing: boolean;
     };
@@ -28,7 +28,7 @@ export class CookiesConsent implements ICookiesConsent {
     consents: {
         uncategorized: boolean;
         essential: boolean;
-        personnalization: boolean;
+        personalization: boolean;
         analytics: boolean;
         marketing: boolean;
     };

@@ -4,9 +4,9 @@ import {CookiesConsent} from "/opt/nodejs/entities/CookiesConsent";
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 const tableName = "CookiesConsent";
+// const metrics = new Metrics();
 
 export const handler = async (event: any, context:any ): Promise<any> => {
-    console.log("TABLE NAME", tableName)
 
     if(!event.body){
         return {
@@ -16,13 +16,12 @@ export const handler = async (event: any, context:any ): Promise<any> => {
     }
 
     const body = typeof event.body == "object" ? event.body : JSON.parse(event.body);
+    const userAgent = event.headers["User-Agent"];
 
     const cookiesConsent: CookiesConsent = new CookiesConsent(body);
     cookiesConsent.url= event.headers.host;
-    cookiesConsent.userAgent = event.headers["User-Agent"]
-    cookiesConsent.anonymousIp = formatUserIp(event.requestContext.identity.sourceIp)
-
-    console.log("Cookies Consent Data : ",cookiesConsent);
+    cookiesConsent.userAgent = userAgent;
+    cookiesConsent.anonymousIp = formatUserIp(event.requestContext.identity.sourceIp);
 
     const createDynamodbCookiesParams = {
         TableName: tableName,
@@ -30,11 +29,11 @@ export const handler = async (event: any, context:any ): Promise<any> => {
         ConditionExpression: "attribute_not_exists(PK)",
     };
     await dynamodb.put(createDynamodbCookiesParams).promise();
+    // metrics.addMetric('UserCookiesConsent', MetricUnits.Count, 1)
 
         return {
             statusCode: 200,
-            body: "Your parameters has been saved",
-
+            body: `${userAgent}'s parameters saved`,
         };
 };
 
