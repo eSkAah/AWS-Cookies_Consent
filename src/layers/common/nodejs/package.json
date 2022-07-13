@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-lambda-powertools/metrics": "^0.11.1-rc.0",
     "uuid": "^8.3.2"
   }
 }

@@ -20,6 +20,10 @@
     "typescript": "4.1.2"
   },
   "dependencies": {
+    "@aws-lambda-powertools/logger": "0.5.1",
+    "@aws-lambda-powertools/metrics": "0.5.1",
+    "@aws-lambda-powertools/tracer": "0.5.1",
+    "@middy/core": "^3.1.0",
     "@types/uuid": "^8.3.4",
     "aws-cdk-lib": "2.20.0",
     "aws-sdk": "2.1087.0",
